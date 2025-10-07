@@ -23,9 +23,9 @@ contract Evidence {
     ////////////////////////
     // State Variables   ///
     ////////////////////////
-    address private immutable i_originalEvidenceLedgerAddress;
-    address private immutable i_creator;
-    bytes32 private immutable i_evidenceID;
+    address private immutable ORIGINAL_EVIDENCE_LEDGER_ADDRESS;
+    address private immutable CREATOR;
+    bytes32 private immutable EVIDENCE_ID;
     address private owner;
     address[] private chainOfCustody;
     string private description;
@@ -35,7 +35,7 @@ contract Evidence {
     // Events  ///
     //////////////
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-    event EvindenceDiscontinued(bytes32 indexed evidenceID);
+    event EvindenceDiscontinued(bytes32 indexed evidenceId);
 
     //////////////////
     // Modifiers   ///
@@ -63,7 +63,7 @@ contract Evidence {
 
     constructor(
         address _evidenceLedgerAddress,
-        bytes32 _evidenceID,
+        bytes32 _evidenceId,
         address _creator,
         address _initialOwner,
         string memory _description
@@ -71,14 +71,14 @@ contract Evidence {
         if (msg.sender != _evidenceLedgerAddress) revert UnauthorizedDeployment(msg.sender);
         if (_initialOwner != _creator) revert CreatorIsNotInitialOwner(_creator, msg.sender);
         if (_creator == address(0)) revert("Invalid Creator: cannot be zero address");
-        if (_evidenceID == 0x0) revert("Invalid evidence ID: ID cannot be empty");
+        if (_evidenceId == 0x0) revert("Invalid evidence ID: ID cannot be empty");
         if (bytes(_description).length == 0) revert("Invalid description: description cannot be empty");
 
-        i_originalEvidenceLedgerAddress = _evidenceLedgerAddress;
-        i_creator = _creator;
-        owner = i_creator;
-        chainOfCustody.push(i_creator);
-        i_evidenceID = _evidenceID;
+        ORIGINAL_EVIDENCE_LEDGER_ADDRESS = _evidenceLedgerAddress;
+        CREATOR = _creator;
+        owner = CREATOR;
+        chainOfCustody.push(CREATOR);
+        EVIDENCE_ID = _evidenceId;
         description = _description;
     }
 
@@ -89,9 +89,9 @@ contract Evidence {
         emit OwnershipTransferred(previousOwner, newOwner);
     }
 
-    function DiscontinueEvidence() external onlyIfActive {
+    function discontinueEvidence() external onlyIfActive {
         _discontinueEvidence();
-        emit EvindenceDiscontinued(i_evidenceID);
+        emit EvindenceDiscontinued(EVIDENCE_ID);
     }
 
     // Private & Internal Functions View function
@@ -105,12 +105,12 @@ contract Evidence {
     }
 
     // Public & External Functions View Functions
-    function getEvidenceID() external view returns (bytes32) {
-        return i_evidenceID;
+    function getevidenceId() external view returns (bytes32) {
+        return EVIDENCE_ID;
     }
 
     function getEvidenceCreator() external view returns (address) {
-        return i_creator;
+        return CREATOR;
     }
 
     function getEvidenceDescription() external view returns (string memory) {
