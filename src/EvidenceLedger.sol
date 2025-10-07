@@ -8,7 +8,6 @@ contract EvidenceLedger {
     // Errors      ///
     //////////////////
 
-
     ////////////////////////
     // State Variables   ///
     ////////////////////////
@@ -17,7 +16,7 @@ contract EvidenceLedger {
 
     mapping(bytes32 evidenceID => Evidence evidence) private s_evidenceIDToEvidence;
     mapping(address creator => bytes32[] evidenceIDs) private s_creatorToEvidenceIDs;
-    
+
     //////////////
     // Events  ///
     //////////////
@@ -26,7 +25,6 @@ contract EvidenceLedger {
     //////////////////
     // Modifiers   ///
     //////////////////
-
 
     //////////////////
     // Functions   ///
@@ -46,7 +44,7 @@ contract EvidenceLedger {
     function getEvidenceLedgerStatus() external pure returns (bool evidenceLedgerCreated) {
         evidenceLedgerCreated = true;
     }
-    
+
     function getEvidenceContractAddress(bytes32 evidenceID) external view returns (address evidenceContractAddress) {
         evidenceContractAddress = address(s_evidenceIDToEvidence[evidenceID]);
     }
@@ -54,5 +52,4 @@ contract EvidenceLedger {
     function getEvidencesCreatedByCreator(address creator) external view returns (bytes32[] memory evidenceIDs) {
         evidenceIDs = s_creatorToEvidenceIDs[creator];
     }
- 
 }

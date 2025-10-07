@@ -9,10 +9,9 @@ pragma solidity ^0.8.20;
  * Evidence ID and Contract Address define a unique piece of evidence.
  * 1. Evidence ID is passed through EvidenceLedger contract.
  * 2. Contract Address is the address of this contract.
- * 
+ *
  * @notice
  */
-
 contract Evidence {
     //////////////////
     // Errors      ///
@@ -62,8 +61,14 @@ contract Evidence {
 
     // Constructor
 
-    constructor(address _evidenceLedgerAddress, bytes32 _evidenceID, address _creator, address _initialOwner, string memory _description) {
-        if(msg.sender != _evidenceLedgerAddress) revert UnauthorizedDeployment(msg.sender);
+    constructor(
+        address _evidenceLedgerAddress,
+        bytes32 _evidenceID,
+        address _creator,
+        address _initialOwner,
+        string memory _description
+    ) {
+        if (msg.sender != _evidenceLedgerAddress) revert UnauthorizedDeployment(msg.sender);
         if (_initialOwner != _creator) revert CreatorIsNotInitialOwner(_creator, msg.sender);
         if (_creator == address(0)) revert("Invalid Creator: cannot be zero address");
         if (_evidenceID == 0x0) revert("Invalid evidence ID: ID cannot be empty");
@@ -78,13 +83,13 @@ contract Evidence {
     }
 
     // External Functions
-    function transferOwnership(address newOwner) external onlyIfActive() {
+    function transferOwnership(address newOwner) external onlyIfActive {
         address previousOwner = owner;
         _transferOwnership(previousOwner, newOwner);
         emit OwnershipTransferred(previousOwner, newOwner);
     }
 
-    function DiscontinueEvidence() external onlyIfActive() {
+    function DiscontinueEvidence() external onlyIfActive {
         _discontinueEvidence();
         emit EvindenceDiscontinued(i_evidenceID);
     }
@@ -95,11 +100,11 @@ contract Evidence {
         chainOfCustody.push(_to);
     }
 
-    function _discontinueEvidence() private onlyCreator() {
+    function _discontinueEvidence() private onlyCreator {
         isActive = false;
     }
 
-    // Public & External Functions View Functions 
+    // Public & External Functions View Functions
     function getEvidenceID() external view returns (bytes32) {
         return i_evidenceID;
     }
@@ -107,7 +112,7 @@ contract Evidence {
     function getEvidenceCreator() external view returns (address) {
         return i_creator;
     }
-    
+
     function getEvidenceDescription() external view returns (string memory) {
         return description;
     }
@@ -123,5 +128,4 @@ contract Evidence {
     function getEvidenceState() external view returns (bool) {
         return isActive;
     }
-
 }
